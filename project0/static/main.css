@@ -2,6 +2,11 @@
   font-family: "Raleway", sans-serif;
   margin: 2%; }
 
+ol, ul {
+  display: flex;
+  align-items: baseline;
+  flex-direction: column; }
+
 body {
   text-align: center;
   font-family: "Raleway", sans-serif; }
@@ -32,6 +37,15 @@ body {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
   .bd-example P {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+
+#list {
+  margin-top: 15%; }
+
+ul li {
+  list-style: square; }
+
+ol li {
+  list-style: upper-roman; }
 
 @media only screen and (min-width: 768px) {
   /* For PC  */

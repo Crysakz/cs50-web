@@ -2,17 +2,28 @@ $default_font: 'Raleway',
 sans-serif;
 $header_font: 'Coiny',
 cursive;
-$font_border: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+$font_border: -1px 0 black,
+0 1px black,
+1px 0 black,
+0 -1px black;
 
 %header-font-margin {
     font-family: $default_font;
     margin: 2%;
 }
 
+%flex-list {
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+}
+
+
 body {
     text-align: center;
     font-family: $default_font;
 }
+
 
 #nav-logo {
     font-family: $header_font;
@@ -56,6 +67,26 @@ body {
     P {
         text-shadow: $font_border;
     }
+}
+
+#list {
+    margin-top: 15%;
+}
+
+ol {
+    @extend %flex-list;
+}
+
+ul {
+    @extend %flex-list;
+}
+
+ul li {
+    list-style: square;
+}
+
+ol li {
+    list-style: upper-roman;
 }
 
 
