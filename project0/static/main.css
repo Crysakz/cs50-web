@@ -2,10 +2,9 @@
   font-family: "Raleway", sans-serif;
   margin: 2%; }
 
-ol, ul {
-  display: flex;
-  align-items: baseline;
-  flex-direction: column; }
+ul, ol {
+  text-align: justify;
+  padding-left: 40%; }
 
 body {
   text-align: center;

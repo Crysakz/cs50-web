@@ -12,12 +12,10 @@ $font_border: -1px 0 black,
     margin: 2%;
 }
 
-%flex-list {
-    display: flex;
-    align-items: baseline;
-    flex-direction: column;
+%center-list {
+    text-align: justify;
+    padding-left: 40%;
 }
-
 
 body {
     text-align: center;
@@ -73,13 +71,10 @@ body {
     margin-top: 15%;
 }
 
-ol {
-    @extend %flex-list;
+ul, ol {
+    @extend %center-list;
 }
 
-ul {
-    @extend %flex-list;
-}
 
 ul li {
     list-style: square;
