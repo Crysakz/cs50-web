@@ -71,16 +71,16 @@ body {
     margin-top: 15%;
 }
 
-ul, ol {
+#other-page ul, ol {
     @extend %center-list;
 }
 
 
-ul li {
+#other-page ul li {
     list-style: square;
 }
 
-ol li {
+#other-page ol li {
     list-style: upper-roman;
 }
 

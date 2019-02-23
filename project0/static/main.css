@@ -2,7 +2,7 @@
   font-family: "Raleway", sans-serif;
   margin: 2%; }
 
-ul, ol {
+#other-page ul, ol {
   text-align: justify;
   padding-left: 40%; }
 
@@ -40,10 +40,10 @@ body {
 #list {
   margin-top: 15%; }
 
-ul li {
+#other-page ul li {
   list-style: square; }
 
-ol li {
+#other-page ol li {
   list-style: upper-roman; }
 
 @media only screen and (min-width: 768px) {
