@@ -1,0 +1,54 @@
+.description {
+  font-family: "Raleway", sans-serif;
+  margin: 2%; }
+
+#other-page ul, ol {
+  text-align: justify;
+  padding-left: 40%; }
+
+body {
+  text-align: center;
+  font-family: "Raleway", sans-serif; }
+
+#nav-logo {
+  font-family: "Coiny", cursive; }
+
+#index-section {
+  background-image: linear-gradient(140deg, #9af5e9 0%, #1fc8db 50%, #2cb5e8 75%);
+  color: white;
+  opacity: 0.85;
+  padding: 2%; }
+  #index-section h1 {
+    font-family: "Coiny", cursive; }
+
+.bd-example {
+  width: auto;
+  max-height: 65vh;
+  height: 35vh;
+  object-fit: cover;
+  overflow: hidden; }
+  .bd-example .carousel-item img {
+    height: 35vh;
+    width: auto;
+    object-fit: cover; }
+  .bd-example h3 {
+    font-family: "Coiny", cursive;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+  .bd-example P {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+
+#list {
+  margin-top: 15%; }
+
+#other-page ul li {
+  list-style: square; }
+
+#other-page ol li {
+  list-style: upper-roman; }
+
+@media only screen and (min-width: 768px) {
+  /* For PC  */
+  .bd-example {
+    height: 55vh; }
+    .bd-example .carousel-item img {
+      height: 55vh; } }
