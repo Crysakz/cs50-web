@@ -1,5 +1,5 @@
 # Project 0
-This is simple website to practise  HTML, CSS (SCSS), GIT and Boostrap 4. Content wise I tried to use interesting features like Carousel and to make nice and clean desing. 
+This is simple website to practise  HTML, CSS (SCSS), GIT and Boostrap 4. Content wise I tried to use interesting features like Carousel and to make nice and clean desing of the website. 
 
 #Requirements
 
