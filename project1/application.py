@@ -23,12 +23,12 @@ db = scoped_session(sessionmaker(bind=engine))
 def validate_register(username, password, password2):
     """ Function to validate Registration form on the server side """
     if (not username or not password) or not password2:
-        return False
+        return False, "Please fill all fields"
     elif password != password2:
-        return False 
-    return True
-
-""" TODO Error Hanlder for custom error, like not same passwords or not filled input fields eg... """
+        return False, "Passwords dont match!"
+    elif len(password) < 5 or len(password2) < 5:
+        return False, "Minimum length of password is 5 chars"
+    return True, "Succesfully registered"
 
 @app.route("/")
 def index():
@@ -40,10 +40,13 @@ def index():
 def register():
     """ Register User """ 
     if request.method == "POST":
-        if validate_register(request.form["username"], request.form["password"], request.form["password2"]):
+
+        valid, message = validate_register(request.form["username"], request.form["password"], request.form["password2"])
+
+        if valid:
             print("succes") #TODO
         else:
-            return render_template("register.html", alert="Please fill all fields")
+            return render_template("register.html", alert=message)
         return render_template("index.html")
     else:
         return render_template("register.html")
