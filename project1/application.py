@@ -1,9 +1,12 @@
 import os
 
-from flask import Flask, session, render_template, request, url_for
+from flask import Flask, session, render_template, request, url_for, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.exc import IntegrityError
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -30,10 +33,21 @@ def validate_register(username, password, password2):
         return False, "Minimum length of password is 5 chars"
     return True, "Succesfully registered"
 
+def validate_login(username, password):
+    """ Validate credeantial before sending SQL requests """
+    if not username or not password:
+        return False, "Please fill all fields"
+    elif len(password) < 5:
+        return False, "Minimum legnth of password is 5"
+    return True, "Welcome back"
+
 @app.route("/")
 def index():
     """ Landing Page """ 
-    return render_template("index.html")
+    if session.get("user_id") is None:
+        return redirect(url_for("login"))
+    else: 
+        return render_template("index.html", user = True)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -44,10 +58,21 @@ def register():
         valid, message = validate_register(request.form["username"], request.form["password"], request.form["password2"])
 
         if valid:
-            print("succes") #TODO
+            username = request.form["username"]
+            password = generate_password_hash(request.form["password"], method='pbkdf2:sha256', salt_length=8)
+
+            try: 
+                user_query = db.execute("INSERT INTO users (username, password) VALUES (:username, :password) RETURNING id", 
+                {"username": username, "password": password})
+                db.commit()
+
+                user_id = user_query.fetchone()[0]
+                session["user_id"] = user_id
+                return redirect(url_for("index"))
+            except IntegrityError:
+                return render_template("register.html", alert="Username already exists")
         else:
             return render_template("register.html", alert=message)
-        return render_template("index.html")
     else:
         return render_template("register.html")
     
@@ -55,7 +80,31 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """ Login  User """ 
+
+    session.clear()
+    
     if request.method == "POST":
-        return render_template("index.html")
+        username, password = request.form["username"], request.form["password"]
+        valid, message = validate_login(username, password)
+
+        if valid:
+                
+            user = db.execute("SELECT * FROM users WHERE username = :username",
+            {"username": username}).fetchone()
+
+            if check_password_hash(user[2], password):
+                session["user_id"] = user[0]
+                return redirect(url_for("index"))
+            else:
+                return render_template("login.html", alert = "Invalid username or password")
+        else:
+            return render_template("login.html", alert = message)        
     else:
         return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """ Remove user id from session """ 
+    session.clear()
+    return redirect(url_for("index"))
