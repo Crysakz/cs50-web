@@ -41,13 +41,24 @@ def validate_login(username, password):
         return False, "Minimum legnth of password is 5"
     return True, "Welcome back"
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     """ Landing Page """ 
-    if session.get("user_id") is None:
-        return redirect(url_for("login"))
-    else: 
-        return render_template("index.html", user = True)
+
+    if request.method == "POST":
+        search = request.form["search"]
+        
+        rows = db.execute("SELECT * FROM books WHERE UPPER(isbn) LIKE :search OR UPPER(title) LIKE :search OR UPPER(author) LIKE :search",
+        {"search": "%" + search.upper() + "%"}).fetchall()
+
+        print(rows)
+
+        return render_template("index.html", user = True,  rows = rows)
+    else:
+        if session.get("user_id") is None:
+            return redirect(url_for("login"))
+        else: 
+            return render_template("index.html", user = True)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -82,7 +93,7 @@ def login():
     """ Login  User """ 
 
     session.clear()
-    
+
     if request.method == "POST":
         username, password = request.form["username"], request.form["password"]
         valid, message = validate_login(username, password)
@@ -91,10 +102,10 @@ def login():
                 
             user = db.execute("SELECT * FROM users WHERE username = :username",
             {"username": username}).fetchone()
-
-            if check_password_hash(user[2], password):
-                session["user_id"] = user[0]
-                return redirect(url_for("index"))
+            if user:
+                if check_password_hash(user[2], password):
+                    session["user_id"] = user[0]
+                    return redirect(url_for("index"))
             else:
                 return render_template("login.html", alert = "Invalid username or password")
         else:
