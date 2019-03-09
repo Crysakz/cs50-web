@@ -1,4 +1,5 @@
 import os
+import requests
 
 from flask import Flask, session, render_template, request, url_for, redirect
 from flask_session import Session
@@ -22,6 +23,10 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
+# Check for API key enviroment varable
+if not os.getenv("KEY"):
+    raise RuntimeError("Goodreads API is not set")
 
 
 def validate_register(username, password, password2):
@@ -53,11 +58,22 @@ def index():
     if request.method == "POST":
         search = request.form["search"]
 
+        if not search:
+            return render_template("index.html",
+                                   user=True,
+                                   alert="Please fill the Search  field!")
+
+        # Fixes users and database casing by using UPPER function
         rows = db.execute("""SELECT * FROM books WHERE UPPER(isbn)
                          LIKE :search OR UPPER(title)
                          LIKE :search OR UPPER(author)
                          LIKE :search""",
                           {"search": "%" + search.upper() + "%"}).fetchall()
+
+        if not rows:
+            return render_template("index.html",
+                                   user=True,
+                                   alert="We dont know this book. Sorry! :(")
 
         return render_template("index.html", user=True, rows=rows)
 
@@ -68,16 +84,74 @@ def index():
             return render_template("index.html", user=True)
 
 
-@app.route("/books/<string:isbn>")
+@app.route("/books/<string:isbn>", methods=["GET", "POST"])
 def books(isbn):
-    return "Hello " + isbn
+    if request.method == "GET":
+
+        if session.get("user_id") is None:
+            return redirect(url_for("login"))
+
+        book = db.execute("SELECT * FROM books WHERE isbn=:isbn ",
+                          {"isbn": isbn}).fetchone()
+
+        if book:
+            KEY = os.getenv("KEY")
+            isbn = book[0]
+
+            try:
+                res = requests.get("https://www.goodreads.com/"
+                                   "book/review_counts.json",
+                                   params={"key": KEY, "isbns": isbn},
+                                   timeout=10)
+                rating = True
+            except requests.exceptions.RequestException:
+                rating = False
+
+            if rating:
+                res = res.json()
+                rating = res["books"][0]["average_rating"]
+
+            reviews = db.execute("SELECT review, rating, user_id FROM reviews WHERE isbn_id=:isbn",
+                                 {"isbn": isbn}).fetchall()
+
+            user_has_reviewed = False
+
+            for user in reviews:
+                if user[2] == session.get("user_id"):
+                    user_has_reviewed = True
+
+            return render_template("book.html",
+                                   book=book,
+                                   rating=rating,
+                                   user=True,
+                                   user_review=reviews,
+                                   user_has_reviewed=user_has_reviewed)
+        else:
+            return render_template("book.html",
+                                   alert="Sorry could find this book,"
+                                   " did you use search function?",
+                                   user=True)
+    else:
+        rating, review = request.form["rating"], request.form["review"]
+
+        if not rating or not review:
+            return render_template("book.html", alert="Please fill all fields")
+
+        db.execute("INSERT INTO reviews (rating, review, isbn_id, user_id) VALUES (:rating, :review, :isbn, :user_id)",
+                    {"rating": rating,
+                    "review": review,
+                    "isbn": isbn,
+                    "user_id": session.get("user_id")})
+
+        db.commit()
+
+        return redirect(request.url)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """ Register User """
     if request.method == "POST":
-
         valid, message = validate_register(request.form["username"],
                                            request.form["password"],
                                            request.form["password2"])
@@ -122,12 +196,11 @@ def login():
         valid, message = validate_login(username, password)
 
         if valid:
-
             user = db.execute("SELECT * FROM users WHERE username = :username",
                               {"username": username}).fetchone()
 
             if user:
-                # Werukzeug function to safely compare passwords
+                # Werkzeug function to safely compare passwords
                 if check_password_hash(user[2], password):
                     session["user_id"] = user[0]
                     return redirect(url_for("index"))

@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Library index
+{% endblock %}
+
+{% block body %}
+
+{% if alert %}
+<div class="alert alert-danger" role="alert">{{ alert }}</div>
+{% endif %}
+
+
+{% if book %}
+<div class="jumbotron">
+    <h1 class="display-4">{{ book[1] }} by  {{ book[2]}}</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="my-4">
+    {% if rating %}
+    <p>Goodreads average rating: {{ rating }}</p>
+    {% endif %}
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+</div>
+{% endif %}
+
+<!--{% if not user_review %}
+<form method="post">
+  <div class="form-group">
+      <label for="Rating">Rating:</label>
+      <input type="number" class="form-control" name="rating" min="0" max="5" required>
+  </div>
+  <div class="form-group">
+      <label for="password-first">Review:</label>
+      <textarea class="form-control" name="review" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+-->
+
+{% if not user_has_reviewed %}
+<form method="post">
+  <div class="form-group">
+      <label for="Rating">Rating:</label>
+      <input type="number" class="form-control" name="rating" min="0" max="5" required>
+  </div>
+  <div class="form-group">
+      <label for="password-first">Review:</label>
+      <textarea class="form-control" name="review" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+
+
+{% for reviews in user_review %}
+  <p>{{ reviews[2] }}</p>
+{% endfor%}
+
+{% endblock %}
+
+<!--
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Username + rating</h5>
+        <p class="card-text">Review content</p>
+        <a href="#" class="btn btn-primary">IF original user, button to delete?</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+</div>
+-->
