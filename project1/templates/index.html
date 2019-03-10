@@ -7,18 +7,22 @@
 {% block body %}
 
 {% if alert %}
-<div class="alert alert-danger" role="alert">{{ alert }}</div>
+<div class="alert alert-danger text-center" role="alert">{{ alert }}</div>
 {% endif %}
 
 {% if user %}
-
-<form method="post" class="form-inline">
-    <div class="form-group">
-        <label for="Search">Search:</label>
-        <input type="text" class="form-control" name="search" placeholder="Type author name, ISBN or title of the book">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="container">
+  <form method="post">
+    <div class="row">
+      <div class="col-12 align-items-center">
+        <input type="search" class="form-control" name="search" placeholder="Type author name, ISBN or title of the book">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+  </div>
+  </form>
+</div>
   
 {% endif %}
 

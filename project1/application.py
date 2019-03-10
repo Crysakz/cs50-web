@@ -5,7 +5,7 @@ from flask import Flask, session, render_template, request, url_for, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -110,21 +110,27 @@ def books(isbn):
             if rating:
                 res = res.json()
                 rating = res["books"][0]["average_rating"]
+                goodreads_book_id = res["books"][0]["id"]
 
-            reviews = db.execute("SELECT review, rating, user_id FROM reviews WHERE isbn_id=:isbn",
+            reviews = db.execute("""SELECT review, rating, user_id, username
+                                  FROM reviews JOIN users
+                                  ON reviews.user_id=users.id
+                                  WHERE isbn_id=:isbn""",
                                  {"isbn": isbn}).fetchall()
 
             user_has_reviewed = False
 
             for user in reviews:
-                if user[2] == session.get("user_id"):
+                if user["user_id"] == session.get("user_id"):
                     user_has_reviewed = True
 
             return render_template("book.html",
                                    book=book,
                                    rating=rating,
+                                   goodreads_book_id=goodreads_book_id,
                                    user=True,
                                    user_review=reviews,
+                                   user_session=session.get("user_id"),
                                    user_has_reviewed=user_has_reviewed)
         else:
             return render_template("book.html",
@@ -137,13 +143,18 @@ def books(isbn):
         if not rating or not review:
             return render_template("book.html", alert="Please fill all fields")
 
-        db.execute("INSERT INTO reviews (rating, review, isbn_id, user_id) VALUES (:rating, :review, :isbn, :user_id)",
-                    {"rating": rating,
-                    "review": review,
-                    "isbn": isbn,
-                    "user_id": session.get("user_id")})
+        try:
+            db.execute("""INSERT INTO reviews (rating, review, isbn_id, user_id)
+                    VALUES (:rating, :review, :isbn, :user_id)""",
+                       {"rating": rating,
+                        "review": review,
+                        "isbn": isbn,
+                        "user_id": session.get("user_id")
+                        })
 
-        db.commit()
+            db.commit()
+        except DataError:
+            return render_template("book.html", alert="Review is too long!")
 
         return redirect(request.url)
 
