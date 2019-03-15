@@ -1,13 +1,19 @@
 import os
-import requests
 
-from flask import Flask, session, render_template, request, url_for, redirect
+import requests
+from flask import (Flask,
+                   jsonify,
+                   redirect,
+                   render_template,
+                   request,
+                   session,
+                   url_for)
+
 from flask_session import Session
 from sqlalchemy import create_engine
+from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.exc import IntegrityError, DataError
-
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 
@@ -30,7 +36,7 @@ if not os.getenv("KEY"):
 
 
 def validate_register(username, password, password2):
-    """ Function to validate Registration form on the server side """
+    """ Validate Registration form on the server side """
     if (not username or not password) or not password2:
         return False, "Please fill all fields"
     elif password != password2:
@@ -91,10 +97,11 @@ def books(isbn):
         if session.get("user_id") is None:
             return redirect(url_for("login"))
 
-        book = db.execute("SELECT * FROM books WHERE isbn=:isbn ",
+        book = db.execute("SELECT * FROM books WHERE isbn=:isbn",
                           {"isbn": isbn}).fetchone()
 
         if book:
+            # Set up Goodreads API key
             KEY = os.getenv("KEY")
             isbn = book[0]
 
@@ -134,10 +141,11 @@ def books(isbn):
                                    user_has_reviewed=user_has_reviewed)
         else:
             return render_template("book.html",
-                                   alert="Sorry could find this book,"
+                                   alert="Sorry, couldn't find this book,"
                                    " did you use search function?",
                                    user=True)
     else:
+        # POST method, users wants to send review
         rating, review = request.form["rating"], request.form["review"]
 
         if not rating or not review:
@@ -155,13 +163,45 @@ def books(isbn):
             db.commit()
         except DataError:
             return render_template("book.html", alert="Review is too long!")
-
+        # Send user back to original url, so he can see his review
         return redirect(request.url)
+
+
+@app.route("/api/<string:isbn>")
+def api(isbn):
+    """Responds with json to request"""
+
+    req_book = db.execute("""SELECT * FROM books WHERE isbn=:isbn""",
+                          {"isbn": isbn}).fetchone()
+
+    if not req_book:
+        return jsonify({"error": "Book has not been found"}), 404
+
+    req_reviews = db.execute("""SELECT COUNT(rating) AS COUNTER, AVG(rating) AS AVERAGE
+                            FROM reviews WHERE isbn_id=:isbn""",
+                             {"isbn": isbn}).fetchone()
+
+    average = req_reviews["average"]
+
+    # JSONIFY doesnt support Decimal type, so we need to change to float
+    if not average:
+        average = 0
+    else:
+        average = float(average)
+
+    return jsonify({
+        "title": req_book["title"],
+        "author": req_book["author"],
+        "year": req_book["year"],
+        "isbn": req_book["isbn"],
+        "review_count": req_reviews["counter"],
+        "average_score": average
+    })
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """ Register User """
+    """Register User to the database"""
     if request.method == "POST":
         valid, message = validate_register(request.form["username"],
                                            request.form["password"],
@@ -190,8 +230,10 @@ def register():
                 return render_template("register.html",
                                        alert="Username already exists")
         else:
+            # User sends invalid data
             return render_template("register.html", alert=message)
     else:
+        # Post method
         return render_template("register.html")
 
 

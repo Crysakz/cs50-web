@@ -26,6 +26,7 @@
 {% endif %}
 
 {% if not user_has_reviewed %}
+   {% if not alert %}
   <form method="post">
     <div class="form-group col-12 align-items-center">
         <label for="Rating">Rating:</label>
@@ -39,6 +40,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </form>
+   {% endif %}
 {% endif %}
 
 
