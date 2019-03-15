@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Library index
+{% endblock %}
+
+{% block body %}
+
+{% if alert %}
+  <div class="alert alert-danger text-center" role="alert">{{ alert }}</div>
+{% endif %}
+
+
+{% if book %}
+  <div class="jumbotron">
+      <h1 class="display-4">{{ book[1] }} by  {{ book[2]}}</h1>
+      <p>Published year: {{ book[3] }}</p>
+      <hr class="my-4">
+      {% if rating %}
+        <p>Goodreads average rating: {{ rating }}</p>
+      {% endif %}
+      {% if goodreads_book_id %}
+        <a class="btn btn-primary btn-lg" href="https://www.goodreads.com/book/show/{{goodreads_book_id}}" role="button">Learn more</a>
+      {% endif %}
+  </div>
+{% endif %}
+
+{% if not user_has_reviewed %}
+   {% if not alert %}
+  <form method="post">
+    <div class="form-group col-12 align-items-center">
+        <label for="Rating">Rating:</label>
+        <input type="number" class="form-control" name="rating" min="1" max="5" required>
+    </div>
+    <div class="form-group col-12 align-items-center">
+        <label for="Review">Review:</label>
+        <textarea class="form-control" name="review" rows="3" maxlength="4096"></textarea>
+    </div>
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+   {% endif %}
+{% endif %}
+
+
+<div class="container">
+  <div class="row">
+    {% for reviews in user_review %}
+      <div class="col-sm-12">
+        <div class="card w-150">
+          <div class="card-body">
+            <h5 class="card-title">User: {{ reviews[3]}} Rating:{{ reviews[1] }}</h5>
+            <p class="card-text">{{ reviews[0] }}</p>
+            {% if user_session == reviews[2] %}
+              <a href="#" class="btn btn-primary">IF original user, button to delete?</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}
+
+<!--
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Username + rating</h5>
+        <p class="card-text">Review content</p>
+        <a href="#" class="btn btn-primary">IF original user, button to delete?</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+</div>
+-->

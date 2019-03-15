@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Library index
+{% endblock %}
+
+{% block body %}
+
+{% if alert %}
+<div class="alert alert-danger text-center" role="alert">{{ alert }}</div>
+{% endif %}
+
+{% if user %}
+<div class="container">
+  <form method="post">
+    <div class="row">
+      <div class="col-12 align-items-center">
+        <input type="search" class="form-control" name="search" placeholder="Type author name, ISBN or title of the book">
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+  </div>
+  </form>
+</div>
+  
+{% endif %}
+
+
+{% if rows %}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ISBN</th>
+        <th scope="col">Title</th>
+        <th scope="col">Author</th>
+        <th scope="col">Year</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          <td><a href="books/{{ row[0] }}">{{ row[0] }}</a></td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endif %}
+
+{% endblock %}
+
