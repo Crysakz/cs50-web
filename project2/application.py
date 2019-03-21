@@ -22,7 +22,14 @@ def index():
 
 @app.route("/chat")
 def chat():
-    return render_template("chat.html")
+    return render_template("chat.html", rooms=rooms)
+
+
+@socketio.on("submit room")
+def add_room(data):
+    room_name = data["roomName"]
+    rooms.append(room_name)
+    emit("add room", room_name, broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(app)
