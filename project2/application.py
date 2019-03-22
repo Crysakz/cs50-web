@@ -28,8 +28,13 @@ def chat():
 @socketio.on("submit room")
 def add_room(data):
     room_name = data["roomName"]
-    rooms.append(room_name)
-    emit("add room", room_name, broadcast=True)
+
+    if room_name not in rooms:
+        rooms.append(room_name)
+        emit("add room", room_name, broadcast=True)
+    else:
+        # Alerts only user, who tried adding existing room
+        emit("room already exist", room_name)
 
 if __name__ == '__main__':
     socketio.run(app)
