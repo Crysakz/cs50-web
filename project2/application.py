@@ -1,15 +1,22 @@
 import os
 
 from flask import Flask, render_template, request, redirect, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-online_users = []
-rooms = []
+# TODO:
+# Send message func
+# Make better data structure for room
+# Store last 100 messages per room
+# Leave room function
+
+
+
+rooms = ["general"]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -35,6 +42,27 @@ def add_room(data):
     else:
         # Alerts only user, who tried adding existing room
         emit("room already exist", room_name)
+
+
+@socketio.on('join')
+def on_join(data):
+    """ User can join specific room, and message about
+    joining will be displayed to all users in the room """
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    emit("joined", (username, room), broadcast=True, room=room)
+
+
+@socketio.on('leave')
+def on_leave(data):
+    # TODO
+    """
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    send(username + ' has left the room.', room=room)
+    """
 
 if __name__ == '__main__':
     socketio.run(app)
