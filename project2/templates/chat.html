@@ -22,7 +22,11 @@
         <li>{{ room }}</li>
         {% endfor %}
     </ul>
-
+    <div id="chatSpace"></div>
+    <form id="chatForm">
+        <input type="text" id="message" placeholder="Send message">
+        <button type="submit">Add</button>
+    </form>
     <!-- Boostrap [4.3.1] CDN  + SocketIO [2.2.0] -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
