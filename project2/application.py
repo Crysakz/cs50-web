@@ -15,7 +15,6 @@ socketio = SocketIO(app)
 # Leave room function
 
 
-
 rooms = ["general"]
 
 
@@ -51,7 +50,7 @@ def on_join(data):
     username = data['username']
     room = data['room']
     join_room(room)
-    emit("joined", (username, room), broadcast=True, room=room)
+    emit("joined", (username, room), room=room)
 
 
 @socketio.on('leave')
