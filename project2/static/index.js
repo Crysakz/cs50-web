@@ -40,16 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#room-form').onsubmit = () => {
       // Send room name to server
       const text = document.querySelector('#room-name').value;
-      socket.emit('submit room', { roomName: text });
-      text.value = '';
+      socket.emit('submit room', { room: text });
+      document.querySelector('#room-name').value = '';
       return false;
     };
 
     document.querySelector('#chat-form').onsubmit = () => {
       // Send message TODO!
       const message = document.querySelector('#message').value;
-      socket.emit('message', { roomName: localStorage.room, message, username: localStorage.username });
-      message.value = '';
+      socket.emit('message', { room: localStorage.room, message, username: localStorage.username });
+      document.querySelector('#message').value = '';
       return false;
     };
 
@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Connect user to chat room
       const room = event.target.innerHTML;
       if (localStorage.room !== room) {
+        socket.emit('leave', { room: localStorage.room });
         localStorage.room = room;
         document.querySelector('#chat-space').innerHTML = '';
         socket.emit('join', { room, username: localStorage.username });
@@ -79,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Send message that user has joned specific room to all users in the room
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
+    document.querySelector('#chat-space').append(p);
+  });
+
+  socket.on('message', (message, username, time) => {
+    // Send message that user has joned specific room to all users in the room
+    const p = document.createElement('p');
+    p.innerHTML = `${username}: ${message}  ${time}`;
     document.querySelector('#chat-space').append(p);
   });
 
