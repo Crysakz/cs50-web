@@ -1,4 +1,5 @@
 import os
+import time
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
@@ -13,6 +14,12 @@ socketio = SocketIO(app)
 # Make better data structure for room
 # Store last 100 messages per room
 # Leave room function
+
+
+class Rooms():
+    def __init__(self, name):
+        self.name = name
+        self.messages = []
 
 
 rooms = ["general"]
@@ -33,35 +40,43 @@ def chat():
 
 @socketio.on("submit room")
 def add_room(data):
-    room_name = data["roomName"]
+    room = data["room"]
 
-    if room_name not in rooms:
-        rooms.append(room_name)
-        emit("add room", room_name, broadcast=True)
+    if room not in rooms:
+        rooms.append(room)
+        emit("add room", room, broadcast=True)
     else:
         # Alerts only user, who tried adding existing room
-        emit("room already exist", room_name)
+        emit("room already exist", room)
 
 
-@socketio.on('join')
+@socketio.on("join")
 def on_join(data):
     """ User can join specific room, and message about
     joining will be displayed to all users in the room """
-    username = data['username']
-    room = data['room']
+    username = data["username"]
+    room = data["room"]
     join_room(room)
     emit("joined", (username, room), room=room)
 
 
+@socketio.on("message")
+def send_message(data):
+    room = data["room"]
+    message = data["message"]
+    user = data["username"]
+
+    epoch = time.localtime()
+    time_string = time.strftime("%H:%M", epoch)
+
+    emit("message", (message, user, time_string), room=room)
+
+
 @socketio.on('leave')
 def on_leave(data):
-    # TODO
-    """
-    username = data['username']
     room = data['room']
     leave_room(room)
-    send(username + ' has left the room.', room=room)
-    """
+
 
 if __name__ == '__main__':
     socketio.run(app)
