@@ -3,26 +3,15 @@ import time
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from rooms import Rooms
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# TODO:
-# Send message func
-# Make better data structure for room
-# Store last 100 messages per room
-# Leave room function
 
-
-class Rooms():
-    def __init__(self, name):
-        self.name = name
-        self.messages = []
-
-
-rooms = ["general"]
+rooms = {"general": Rooms("general")}
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -35,7 +24,7 @@ def index():
 
 @app.route("/chat")
 def chat():
-    return render_template("chat.html", rooms=rooms)
+    return render_template("chat.html", rooms=rooms.keys())
 
 
 @socketio.on("submit room")
@@ -43,7 +32,7 @@ def add_room(data):
     room = data["room"]
 
     if room not in rooms:
-        rooms.append(room)
+        rooms[room] = Rooms(room)
         emit("add room", room, broadcast=True)
     else:
         # Alerts only user, who tried adding existing room
@@ -57,6 +46,8 @@ def on_join(data):
     username = data["username"]
     room = data["room"]
     join_room(room)
+    messages = rooms[room].messages
+    emit("display messages", messages)
     emit("joined", (username, room), room=room)
 
 
@@ -69,7 +60,10 @@ def send_message(data):
     epoch = time.localtime()
     time_string = time.strftime("%H:%M", epoch)
 
-    emit("message", (message, user, time_string), room=room)
+    if room in rooms:
+        room_object = rooms.get(room)
+        room_object.append_message([user, message, time_string])
+        emit("message", (message, user, time_string), room=room)
 
 
 @socketio.on('leave')
