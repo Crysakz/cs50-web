@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
       joinLastRoom() {
         socket.emit('join', { room: this.room, username: this.username });
       }
+
+      updateRoom(room) {
+        window.localStorage.room = room;
+        this.room = room;
+      }
     }
     const localStorage = new LocalStorage();
     localStorage.joinLastRoom();
@@ -59,12 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
        Even new ones emmited from other users */
     ulList.addEventListener('click', (event) => {
       // Connect user to chat room
-      const room = event.target.innerHTML;
-      if (localStorage.room !== room) {
-        socket.emit('leave', { room: localStorage.room });
-        localStorage.room = room;
-        document.querySelector('#chat-space').innerHTML = '';
-        socket.emit('join', { room, username: localStorage.username });
+      if (event.target.nodeName === 'LI') {
+        const room = event.target.innerHTML;
+        if (window.localStorage.room !== room) {
+          socket.emit('leave', { room: localStorage.room });
+          localStorage.updateRoom(room);
+          document.querySelector('#chat-space').innerHTML = '';
+          socket.emit('join', { room, username: localStorage.username });
+        }
       }
     });
   });
@@ -81,6 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
     document.querySelector('#chat-space').append(p);
+  });
+
+  socket.on('display messages', (messages) => {
+    messages.forEach((message) => {
+      const oldMessages = document.createElement('p');
+      oldMessages.innerHTML = `${message[0]} ${message[1]} ${message[2]}`;
+      document.querySelector('#chat-space').append(oldMessages);
+    });
   });
 
   socket.on('message', (message, username, time) => {
