@@ -44,14 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('#room-form').onsubmit = () => {
       // Send room name to server
-      const text = document.querySelector('#room-name').value;
-      socket.emit('submit room', { room: text });
-      document.querySelector('#room-name').value = '';
+      const text = document.querySelector('#room-name');
+      socket.emit('submit room', { room: text.value });
+      text.value = '';
+      text.classList.remove('is-invalid');
       return false;
     };
 
     document.querySelector('#chat-form').onsubmit = () => {
-      // Send message TODO!
+      // Send message to server side
       const message = document.querySelector('#message').value;
       socket.emit('message', { room: localStorage.room, message, username: localStorage.username });
       document.querySelector('#message').value = '';
@@ -75,6 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+  /* TODO:
+    Make handlebars template for displaying old messages.
+    And for sending appending new ones --Maybe possible by one template
+  */
 
   socket.on('add room', (data) => {
     // Apend room name to list of rooms
@@ -93,7 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('display messages', (messages) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
-      oldMessages.innerHTML = `${message[0]} ${message[1]} ${message[2]}`;
+      oldMessages.innerHTML = `<span class="username">${message[0]}</span> <span class="message">
+      ${message[1]}</span> <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);
     });
   });
@@ -101,15 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('message', (message, username, time) => {
     // Send message that user has joned specific room to all users in the room
     const p = document.createElement('p');
-    p.innerHTML = `${username}: ${message}  ${time}`;
+    p.innerHTML = `<span class="username">${username}:</span> <span class="message">${message}</span> <span class="time">${time}</span>`;
     document.querySelector('#chat-space').append(p);
   });
 
   socket.on('room already exist', (data) => {
     // Show user alert if he tries to add existing room
-    const errorAlert = document.createElement('div');
-    errorAlert.innerHTML = `${data} Room already exists!`;
-    errorAlert.classList.add('alert', 'alert-danger');
-    document.querySelector('body').prepend(errorAlert);
+    const roomForm = document.getElementById('room-name');
+    roomForm.classList.add('is-invalid');
   });
 });
