@@ -13,20 +13,25 @@
 </head>
 
 <body>
-    <form id="room-form">
-        <input type="text" id="room-name" placeholder="Add new room">
-        <button type="submit">Add</button>
-    </form>
-    <ul id="rooms">
-        {% for room in rooms %}
-        <li>{{ room }}</li>
-        {% endfor %}
-    </ul>
-    <div id="chat-space"></div>
-    <form id="chat-form">
-        <input type="text" id="message" placeholder="Send message">
-        <button type="submit">Add</button>
-    </form>
+    <div id="chat-area">
+        <form id="room-form" novalidate>
+            <input type="text" id="room-name" placeholder="Add new room" class="form-control" required>
+            <button type="submit">Add</button>
+            <div class="invalid-feedback">
+                Room already exists!
+            </div>
+        </form>
+        <ul id="rooms">
+            {% for room in rooms %}
+            <li>{{ room }}</li>
+            {% endfor %}
+        </ul>
+        <div id="chat-space"></div>
+        <form id="chat-form">
+            <input type="text" id="message" placeholder="Send message">
+            <button type="submit">Add</button>
+        </form>
+    </div>
     <!-- Boostrap [4.3.1] CDN  + SocketIO [2.2.0] -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
