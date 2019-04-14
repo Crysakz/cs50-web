@@ -98,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('display messages', (messages) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
-      oldMessages.innerHTML = `<span class="username">${message[0]}</span> <span class="message">
-      ${message[1]}</span> <span class="time">${message[2]}<span>`;
+      oldMessages.innerHTML = `<span class="username">${message[0]}</span> 
+                               <span class="message">${message[1]}</span> 
+                               <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);
     });
   });
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
   });
 
-  socket.on('room already exist', (data) => {
+  socket.on('room already exist', () => {
     // Show user alert if he tries to add existing room
     const roomForm = document.getElementById('room-name');
     roomForm.classList.add('is-invalid');
