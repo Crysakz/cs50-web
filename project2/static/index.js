@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+
     const localStorage = new LocalStorage();
     localStorage.joinLastRoom();
 
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
   /* TODO:
     Make handlebars template for displaying old messages.
     And for sending appending new ones --Maybe possible by one template
@@ -96,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
 
     const userList = document.createElement('li');
+    userList.id = username;
     const emitUserToList = document.querySelector('#room-online-users');
     userList.innerHTML = username;
     emitUserToList.append(userList);
@@ -129,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
   });
 
-  socket.on('user left room', () => {
-    const childsOfUl = document.querySelectorAll('#room-online-users>ul>li');
-    console.log(childsOfUl);
+  socket.on('user left room', (username) => {
+    const onlineUser = document.querySelector(`#${username}`);
+    onlineUser.parentNode.removeChild(onlineUser);
   });
 
   socket.on('room already exist', () => {
