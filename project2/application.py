@@ -35,19 +35,24 @@ def add_room(data):
         rooms[room] = Rooms(room)
         emit("add room", room, broadcast=True)
     else:
-        # Alerts only user, who tried adding existing room
-        emit("room already exist", room)
+        # Alerts only user, who tried adding room
+        emit("room already exist")
 
 
 @socketio.on("join")
 def on_join(data):
     """ User can join specific room, and message about
-    joining will be displayed to all users in the room """
+    joining will be displayed to all users in the room, and displays
+     old messages stored in room"""
     username = data["username"]
     room = data["room"]
-    join_room(room)
     messages = rooms[room].messages
-    emit("display messages", messages)
+    users = rooms[room].users
+
+    join_room(room)
+
+    emit("display messages and online users", (messages, users))
+    rooms[room].append_user(username)
     emit("joined", (username, room), room=room)
 
 
@@ -66,10 +71,14 @@ def send_message(data):
         emit("message", (message, user, time_string), room=room)
 
 
-@socketio.on('leave')
+@socketio.on("leave")
 def on_leave(data):
-    room = data['room']
+    room = data["room"]
+    username = data["username"]
     leave_room(room)
+
+    rooms[room].remove_user(username)
+    emit("user left room", username, room=room)
 
 
 if __name__ == '__main__':

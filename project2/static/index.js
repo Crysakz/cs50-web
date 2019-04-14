@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.room = room;
       }
     }
+
     const localStorage = new LocalStorage();
     localStorage.joinLastRoom();
 
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (event.target.nodeName === 'LI') {
         const room = event.target.innerHTML;
         if (window.localStorage.room !== room) {
-          socket.emit('leave', { room: localStorage.room });
+          socket.emit('leave', { room: localStorage.room, username: localStorage.username });
           localStorage.updateRoom(room);
           document.querySelector('#chat-space').innerHTML = '';
           socket.emit('join', { room, username: localStorage.username });
@@ -93,15 +94,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
     document.querySelector('#chat-space').append(p);
+
+    const userList = document.createElement('li');
+    const emitUserToList = document.querySelector('#room-online-users');
+    userList.innerHTML = username;
+    emitUserToList.append(userList);
   });
 
-  socket.on('display messages', (messages) => {
+  socket.on('display messages and online users', (messages, users) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
       oldMessages.innerHTML = `<span class="username">${message[0]}</span> 
                                <span class="message">${message[1]}</span> 
                                <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);
+    });
+
+    const onlineUsers = document.querySelector('#room-online-users');
+    onlineUsers.innerHTML = '';
+
+    users.forEach((user) => {
+      if (user !== window.localStorage.getItem('username')) {
+        const userLi = document.createElement('li');
+        userLi.innerHTML = user;
+        onlineUsers.append(userLi);
+      }
     });
   });
 
@@ -110,6 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = document.createElement('p');
     p.innerHTML = `<span class="username">${username}:</span> <span class="message">${message}</span> <span class="time">${time}</span>`;
     document.querySelector('#chat-space').append(p);
+  });
+
+  socket.on('user left room', () => {
+    const childsOfUl = document.querySelectorAll('#room-online-users>ul>li');
+    console.log(childsOfUl);
   });
 
   socket.on('room already exist', () => {
