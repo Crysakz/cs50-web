@@ -69,6 +69,7 @@ def send_message(data):
     if room in rooms:
         room_object = rooms.get(room)
         room_object.append_message([user, message, time_string])
+        room_object.enforce_max_messages()
         emit("message", (message, user, time_string), room=room)
 
 
