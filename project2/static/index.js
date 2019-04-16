@@ -79,11 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* TODO:
-    Make handlebars template for displaying old messages.
-    And for sending appending new ones --Maybe possible by one template
-  */
-
   socket.on('add room', (data) => {
     // Apend room name to list of rooms
     const li = document.createElement('li');
