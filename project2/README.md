@@ -4,9 +4,9 @@ Web Programming with Python and JavaScript
 
 ## Description:
 
-This is Web chat usings sockets. As problem set mentions, this app should need database, so name and rooms is stored at users local storage. Users can send message to specific room and easiy change rooms. As personal touch I chosed dynamic list users, which showcases all online users in room where user is and deletes username when particual user goes offline.
+This is Web chat using sockets. As problem set mentions, this app should need database, so name and rooms is stored at users local storage. Users can send message to specific room and easily change rooms. As personal touch I chosed dynamic list of users, which showcases all online users in room where user is and deletes user from the list when particual user goes offline.
 
-In the application.py is the backed logic of the app, manages all emits sended from user and creation of the chat room. The Rooms.py is class file, which stores users messages, enforces limit of maximum capacity per room. And enables to delete or add user to channel, this is imporant for the dynamic list of online users. In static is main.js that handles all user interaction, handles showing old messages, apend messages to chat, showing list of rooms and online users. 
+In the application.py there is the backend logic of the app which manages all emits sended from user and creation of the chat room. The Rooms.py is a class file, which stores users messages, enforces limit of maximum capacity per room. And enables to delete or add user to the channel, this is imporant for the dynamic list of online users. In static there is main.js that handles all user interaction, handles showing old messages, apends messages to chat, shows list of rooms and online users. 
 
 Please note that styling is not done! SASS/CSS file will be added later in separate branch! Right now the chat is fully working per problem spec file, but is not yet styled! 
 
@@ -33,6 +33,6 @@ python application.py
 - [x] In README.md, include a short writeup describing your project, what’s contained in each file, and (optionally) any other additional information the staff should know about your project. Also, include a description of your personal touch and what you chose to add to the project.
 - [x] If you’ve added any Python packages that need to be installed in order to run your web application, be sure to add them to requirements.txt!
 
-## Personoal note:
+## Personal note:
 
 For real demployment use database, as is not really suitable to use for username local storage, which can user manipulate. It's done this way because of description of the probolem set in course. 
