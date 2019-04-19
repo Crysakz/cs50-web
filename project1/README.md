@@ -1,7 +1,7 @@
 # Project 1
 
 ## Description:
-This application let's you import books from books.csv file to your heroku postgres database by import.py. On the website registered user can search by ISBN, name of the book and authors name. If app matches book from db, user can write review (one per book). It also fetches Goodreads rating if aviable. Developers can use api route to get response in json format about the book requested by ISBN number. 
+This application lets you import books from books.csv file to your heroku postgres database by import.py. On the website registered user can search by ISBN, name of the book and authors name. If app matches book from db, user can write review (one per book). It also fetches Goodreads rating if aviable. Developers can use api route to get response in json format about the book requested by ISBN number. 
 
 ## How to run:
 
@@ -12,6 +12,7 @@ pip install requirements.txt
 ```
 
 The url you can find in your Heroku postgres database
+
 Set up in env file:
 
 ```
