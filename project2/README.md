@@ -16,6 +16,10 @@ First install all needed packages:
 ```
 pip install requirements.txt
 ```
+Set up in env file:
+```
+FLASK_APP=application.py
+```
 Then  run:
 
 ```
