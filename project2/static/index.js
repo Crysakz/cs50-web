@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       joinLastRoom() {
-        socket.emit('join', { room: this.room, username: this.username });
+        socket.emit('join', {
+          room: this.room,
+          username: this.username,
+        });
       }
 
       updateRoom(room) {
@@ -47,7 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#room-form').onsubmit = () => {
       // Send room name to server
       const text = document.querySelector('#room-name');
-      socket.emit('submit room', { room: text.value });
+      socket.emit('submit room', {
+        room: text.value,
+      });
       text.value = '';
       text.classList.remove('is-invalid');
       return false;
@@ -56,7 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-form').onsubmit = () => {
       // Send message to server side
       const message = document.querySelector('#message').value;
-      socket.emit('message', { room: localStorage.room, message, username: localStorage.username });
+      socket.emit('message', {
+        room: localStorage.room,
+        message,
+        username: localStorage.username,
+      });
       document.querySelector('#message').value = '';
       return false;
     };
@@ -70,10 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (event.target.nodeName === 'LI') {
         const room = event.target.innerHTML;
         if (window.localStorage.room !== room) {
-          socket.emit('leave', { room: localStorage.room, username: localStorage.username });
+          socket.emit('leave', {
+            room: localStorage.room,
+            username: localStorage.username,
+          });
           localStorage.updateRoom(room);
           document.querySelector('#chat-space').innerHTML = '';
-          socket.emit('join', { room, username: localStorage.username });
+          socket.emit('join', {
+            room,
+            username: localStorage.username,
+          });
         }
       }
     });
@@ -93,8 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
 
     const userList = document.createElement('li');
-    userList.id = username;
     const emitUserToList = document.querySelector('#room-online-users');
+    userList.id = username;
     userList.innerHTML = username;
     emitUserToList.append(userList);
   });
@@ -115,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (user !== window.localStorage.getItem('username')) {
         const userLi = document.createElement('li');
         userLi.innerHTML = user;
+        userLi.id = user;
         onlineUsers.append(userLi);
       }
     });
