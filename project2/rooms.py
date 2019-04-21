@@ -5,13 +5,13 @@ class Rooms():
         self.name = name
         self.messages = []
         self.users = []
-        self.mesage_limit = 100
+        self.message_limit = 100
 
     def append_message(self, list):
         self.messages.append(list)
 
     def enforce_max_messages(self):
-        if len(self.messages) > self.mesage_limit:
+        if len(self.messages) > self.message_limit:
             self.messages.pop(0)
 
     def append_user(self, username):
