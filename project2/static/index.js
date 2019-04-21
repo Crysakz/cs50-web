@@ -101,17 +101,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#rooms').append(li);
   });
 
+  const createLiElement = (username, addId = false) => {
+    const liElement = document.createElement('li');
+    liElement.innerHTML = username;
+    if (addId) liElement.id = username;
+    return liElement;
+  };
+
   socket.on('joined', (username, room) => {
     // Send message that user has joned specific room to all users in the room
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
     document.querySelector('#chat-space').append(p);
 
-    const userList = document.createElement('li');
+    const joinedUserLi = createLiElement(username, true);
     const emitUserToList = document.querySelector('#room-online-users');
-    userList.id = username;
-    userList.innerHTML = username;
-    emitUserToList.append(userList);
+    emitUserToList.append(joinedUserLi);
   });
 
   socket.on('display messages and online users', (messages, users) => {
@@ -128,9 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     users.forEach((user) => {
       if (user !== window.localStorage.getItem('username')) {
-        const userLi = document.createElement('li');
-        userLi.innerHTML = user;
-        userLi.id = user;
+        const userLi = createLiElement(user, true);
         onlineUsers.append(userLi);
       }
     });
