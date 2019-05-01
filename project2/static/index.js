@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('display messages and online users', (messages, users) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
-      oldMessages.innerHTML = `<span class="username">${message[0]}</span> 
+      oldMessages.innerHTML = `<span class="username">${message[0]}:</span> 
                                <span class="message">${message[1]}</span> 
                                <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);

@@ -10,53 +10,61 @@
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="static/main.css" />
 </head>
 
 <body>
-  <div id="room-list-area">
-    <form id="room-form" novalidate>
-      <div class="form-row">
-        <div class="col">
-          <input type="text" id="room-name" placeholder="Add new room" class="form-control" required />
-        </div>
-        <div class="col">
-          <button type="submit" class="btn btn-primary">
-            <i class="far fa-plus-square"></i> Add
-          </button>
-        </div>
-        <div class="invalid-feedback">
-          Room already exists!
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <ul id="rooms">
-    {% for room in rooms %}
-    <li>{{ room }}</li>
-    {% endfor %}
-  </ul>
-
-  <div id="chat-space"></div>
-
-  <div id="submiting-message-area">
-    <form id="chat-form">
-      <div class="form-row">
-        <div class="col">
-          <input type="text" id="message" placeholder="Send message" class="form-control" />
-        </div>
-        <div class="col">
-          <button type="submit" class="btn btn-success">
-            <i class="far fa-paper-plane"></i> Send
-          </button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <div id="room-list-area">
+          <form id="room-form" novalidate>
+            <div class="form-row">
+              <div class="col-6">
+                <input type="text" id="room-name" placeholder="Add new room" class="form-control" maxlength="10"
+                  minlength="5" required />
+              </div>
+              <div class="col-6 sub-button">
+                <button type="submit" class="btn btn-primary">
+                  <i class="far fa-plus-square"></i> Add
+                </button>
+              </div>
+              <div class="invalid-feedback">
+                Room already exists!
+              </div>
+            </div>
+          </form>
+          <div id="room-area">
+            <ul id="rooms">
+              {% for room in rooms %}
+              <li>{{ room }}</li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
-    </form>
-  </div>
+      <div class="col-8" id="chat-area">
+        <div id="chat-space"></div>
 
-  <div id="user-list">
-    <ul id="room-online-users"></ul>
+        <div id="submiting-message-area">
+          <form id="chat-form">
+            <div class="form-row align-items-end">
+              <div class="col-10">
+                <input type="text" id="message" placeholder="Send message" class="form-control" />
+              </div>
+              <div class="col-2 sub-button">
+                <button type="submit" class="btn btn-success" id="send-msg-button">
+                  <i class=" far fa-paper-plane"></i> Send
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="user-list" class="col-2">
+        <ul id="room-online-users"></ul>
+      </div>
+    </div>
   </div>
 
   <!-- Boostrap [4.3.1] CDN  + SocketIO [2.2.0] -->

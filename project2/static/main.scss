@@ -1,0 +1,75 @@
+$default-height: 54rem;
+$default-top-padding: 2%;
+$default-border: 1px solid black;
+$default-radius: 15px;
+
+%block-style {
+  height: $default-height;
+  border: $default-border;
+  border-radius: $default-radius;
+}
+
+body {
+  padding-top: $default-top-padding;
+  background-color: #fffeee;
+}
+
+#room-list-area {
+  @extend %block-style;
+
+  background-color: #b7b0ff;
+}
+
+#room-area {
+  height: $default-height;
+}
+
+#room-form {
+  padding-top: $default-top-padding;
+  padding-left: 5%;
+}
+
+#room-name {
+  width: 170px;
+}
+
+#room-online-users {
+  padding-top: $default-top-padding;
+}
+
+#chat-space {
+  padding-top: 1%;
+  height: 100%;
+  max-height: 94%;
+  overflow-wrap: break-word;
+}
+
+.time {
+  float: right;
+}
+
+#chat-area {
+  @extend %block-style;
+
+  background-color: #ffefb0;
+}
+
+#room-area,
+#chat-space,
+#room-online-users {
+  overflow-y: auto;
+}
+
+#room-online-users {
+  @extend %block-style;
+
+  background-color: #ffc6b0;
+}
+
+.sub-button {
+  text-align: center;
+}
+
+#send-msg-button {
+  width: 10rem;
+}
