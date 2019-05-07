@@ -47,13 +47,13 @@ def on_join(data):
     username = data["username"]
     room = data["room"]
     messages = rooms[room].messages
-    users = rooms[room].users
+    users = rooms[room].users.values()
 
     join_room(room)
 
-    emit("display messages and online users", (messages, users))
-    if username not in rooms[room].users:
-        rooms[room].append_user(username)
+    emit("display messages and online users", (messages, list(users)))
+    if username not in users:
+        rooms[room].append_user(username, request.sid)
     emit("joined", (username, room), room=room)
 
 
@@ -79,7 +79,7 @@ def on_leave(data):
     username = data["username"]
     emit("user left room", username, room=room)
 
-    rooms[room].remove_user(username)
+    rooms[room].remove_user(request.sid)
     leave_room(room)
 
 

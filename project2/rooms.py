@@ -4,7 +4,7 @@ class Rooms():
     def __init__(self, name):
         self.name = name
         self.messages = []
-        self.users = []
+        self.users = {}
         self.message_limit = 100
 
     def append_message(self, list):
@@ -14,8 +14,8 @@ class Rooms():
         if len(self.messages) > self.message_limit:
             self.messages.pop(0)
 
-    def append_user(self, username):
-        self.users.append(username)
+    def append_user(self, username, id):
+        self.users[id] = username
 
-    def remove_user(self, username):
-        self.users.remove(username)
+    def remove_user(self, id):
+        del self.users[id]

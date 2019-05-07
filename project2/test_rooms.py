@@ -13,13 +13,13 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(self.new_room.name, "general")
 
     def test_adding_user(self):
-        self.new_room.append_user("John")
-        self.assertIn("John", self.new_room.users)
+        self.new_room.append_user("John", 245)
+        self.assertIn(245, self.new_room.users)
 
     def test_removing_user(self):
-        self.new_room.append_user("John")
-        self.new_room.remove_user("John")
-        self.assertNotIn("John", self.new_room.users)
+        self.new_room.append_user("John", 275)
+        self.new_room.remove_user(275)
+        self.assertNotIn(275, self.new_room.users)
 
     def test_adding_message(self):
         self.new_room.append_message("Hello!")
