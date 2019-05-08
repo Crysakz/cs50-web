@@ -101,20 +101,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#rooms').append(li);
   });
 
-  const createLiElement = (username, addId = false) => {
+  const createLiElement = (username, id) => {
     const liElement = document.createElement('li');
     liElement.innerHTML = username;
-    if (addId) liElement.id = username;
+    liElement.id = id;
     return liElement;
   };
 
-  socket.on('joined', (username, room) => {
+  socket.on('joined', (username, userId, room) => {
     // Send message that user has joned specific room to all users in the room
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
     document.querySelector('#chat-space').append(p);
 
-    const joinedUserLi = createLiElement(username, true);
+    const joinedUserLi = createLiElement(username, userId);
     const emitUserToList = document.querySelector('#room-online-users');
     emitUserToList.append(joinedUserLi);
   });
@@ -133,7 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     users.forEach((user) => {
       if (user !== window.localStorage.getItem('username')) {
-        const userLi = createLiElement(user, true);
+        const id = user[0];
+        const username = user[1];
+        const userLi = createLiElement(username, id);
         onlineUsers.append(userLi);
       }
     });
@@ -146,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
   });
 
-  socket.on('user left room', (username) => {
-    const onlineUser = document.querySelector(`#${username}`);
+  socket.on('user left room', (userId) => {
+    const onlineUser = document.getElementById(`${userId}`);
     onlineUser.parentNode.removeChild(onlineUser);
   });
 
