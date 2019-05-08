@@ -101,25 +101,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#rooms').append(li);
   });
 
-  const createLiElement = (username, addId = false) => {
+  const createLiElement = (username, id) => {
     const liElement = document.createElement('li');
     liElement.innerHTML = username;
-    if (addId) liElement.id = username;
+    liElement.id = id;
     return liElement;
   };
 
-  socket.on('joined', (username, room) => {
+  socket.on('joined', (username, userId, room) => {
     // Send message that user has joned specific room to all users in the room
     const p = document.createElement('p');
     p.innerHTML = `user ${username} joined ${room}`;
     document.querySelector('#chat-space').append(p);
 
-    const joinedUserLi = createLiElement(username, true);
+    const joinedUserLi = createLiElement(username, userId);
     const emitUserToList = document.querySelector('#room-online-users');
     emitUserToList.append(joinedUserLi);
   });
 
-  socket.on('display messages and online users', (messages, users) => {
+  socket.on('display messages', (messages) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
       oldMessages.innerHTML = `<span class="username">${message[0]}:</span> 
@@ -127,13 +127,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);
     });
+  });
 
+  socket.on('display online users', (users) => {
     const onlineUsers = document.querySelector('#room-online-users');
     onlineUsers.innerHTML = '';
 
     users.forEach((user) => {
       if (user !== window.localStorage.getItem('username')) {
-        const userLi = createLiElement(user, true);
+        const id = user[0];
+        const username = user[1];
+        const userLi = createLiElement(username, id);
         onlineUsers.append(userLi);
       }
     });
@@ -146,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
   });
 
-  socket.on('user left room', (username) => {
-    const onlineUser = document.querySelector(`#${username}`);
-    onlineUser.parentNode.removeChild(onlineUser);
+  socket.on('user disconnected', (userId) => {
+    const onlineUser = document.getElementById(`${userId}`);
+    if (onlineUser) onlineUser.parentNode.removeChild(onlineUser);
   });
 
   socket.on('room already exist', () => {
