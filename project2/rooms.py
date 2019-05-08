@@ -18,4 +18,4 @@ class Rooms():
         self.users[id] = username
 
     def remove_user(self, id):
-        del self.users[id]
+        self.users.pop(id)

@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     emitUserToList.append(joinedUserLi);
   });
 
-  socket.on('display messages and online users', (messages, users) => {
+  socket.on('display messages', (messages) => {
     messages.forEach((message) => {
       const oldMessages = document.createElement('p');
       oldMessages.innerHTML = `<span class="username">${message[0]}:</span> 
@@ -127,7 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                <span class="time">${message[2]}<span>`;
       document.querySelector('#chat-space').append(oldMessages);
     });
+  });
 
+  socket.on('display online users', (users) => {
     const onlineUsers = document.querySelector('#room-online-users');
     onlineUsers.innerHTML = '';
 
@@ -148,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#chat-space').append(p);
   });
 
-  socket.on('user left room', (userId) => {
+  socket.on('user disconnected', (userId) => {
     const onlineUser = document.getElementById(`${userId}`);
-    onlineUser.parentNode.removeChild(onlineUser);
+    if (onlineUser) onlineUser.parentNode.removeChild(onlineUser);
   });
 
   socket.on('room already exist', () => {

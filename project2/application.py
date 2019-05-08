@@ -47,14 +47,15 @@ def on_join(data):
     username = data["username"]
     room = data["room"]
     messages = rooms[room].messages
-    users = rooms[room].users.values()
+    users = rooms[room].users.items()
 
     join_room(room)
 
-    emit("display messages and online users", (messages, list(users)))
+    emit("display messages", (messages))
+    emit("display online users", (list(users)))
     if username not in users:
         rooms[room].append_user(username, request.sid)
-    emit("joined", (username, room), room=room)
+    emit("joined", (username, request.sid, room), room=room)
 
 
 @socketio.on("message")
@@ -75,9 +76,10 @@ def send_message(data):
 
 @socketio.on("leave")
 def on_leave(data):
+    """ User has changed room """
     room = data["room"]
     username = data["username"]
-    emit("user left room", username, room=room)
+    emit("user disconnected", request.sid, room=room)
 
     rooms[room].remove_user(request.sid)
     leave_room(room)
@@ -85,7 +87,13 @@ def on_leave(data):
 
 @socketio.on('disconnect')
 def test_disconnect():
-    print('Client disconnected')
+    """ User killed session """
+    user_id = request.sid
+    for room in rooms.values():
+        if user_id in room.users:
+            room.remove_user(user_id)
+            emit("user disconnected", user_id, broadcast=True)
+            break
 
 
 if __name__ == '__main__':
