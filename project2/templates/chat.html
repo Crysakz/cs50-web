@@ -16,7 +16,7 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-2 col-sm-6 order-6 order-lg-1">
+      <div class="col-lg-2 col-sm-6 col-12 order-6 order-lg-1">
         <div id="room-list-area">
           <form id="room-form" novalidate>
             <div class="form-row">
@@ -43,25 +43,27 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-8 col-sm-12 order-1 order-lg-6" id="chat-area">
-        <div id="chat-space"></div>
+      <div class="col-lg-8 col-sm-12 order-1 col-12 order-lg-6">
+        <div id="chat-area">
 
-        <div id="submiting-message-area">
-          <form id="chat-form">
-            <div class="form-row align-items-end">
-              <div class="col-10">
-                <input type="text" id="message" placeholder="Send message" class="form-control" maxlength="1000" />
+          <div id="chat-space"></div>
+          <div id="submiting-message-area">
+            <form id="chat-form">
+              <div class="form-row align-items-end">
+                <div class="col-6 col-sm-8 col-xl-10">
+                  <input type="text" id="message" placeholder="Send message" class="form-control" maxlength="1000" />
+                </div>
+                <div class="col-6 col-sm-4  col-xl-2 sub-button">
+                  <button type="submit" class="btn btn-success" id="send-msg-button">
+                    <i class=" far fa-paper-plane"></i> Send
+                  </button>
+                </div>
               </div>
-              <div class="col-2 sub-button">
-                <button type="submit" class="btn btn-success" id="send-msg-button">
-                  <i class=" far fa-paper-plane"></i> Send
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-      <div class="col-lg-2 col-sm-6 order-12 order-lg-12" id="user-list">
+      <div class="col-lg-2 col-sm-6 order-12 col-12 order-lg-12" id="user-list">
         <ul id="room-online-users"></ul>
       </div>
     </div>

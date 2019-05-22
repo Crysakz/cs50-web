@@ -10,7 +10,7 @@ if (!window.localStorage.getItem('username')) {
     }
   };
   // Store username in user local storage
-  document.querySelector('#form').onsubmit = () => {
+  document.querySelector('#username-form').onsubmit = () => {
     const user = document.querySelector('#username').value;
     window.localStorage.setItem('username', user);
     window.localStorage.setItem('room', 'general');
