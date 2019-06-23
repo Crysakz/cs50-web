@@ -1,4 +1,4 @@
-$default-height: 54rem;
+$default-height: 40rem;
 $default-top-padding: 2%;
 $default-border: 1px solid black;
 $default-radius: 15px;
@@ -20,13 +20,13 @@ body {
   background-color: #b7b0ff;
 }
 
-#room-area {
-  height: $default-height;
-}
-
 #room-form {
   padding-top: $default-top-padding;
-  padding-left: 5%;
+  padding-left: 2%;
+}
+
+#room-form input {
+  max-width: 98%;
 }
 
 #room-online-users {
@@ -52,8 +52,7 @@ body {
 #chat-area {
   @extend %block-style;
   background-color: #ffefb0;
-
-
+  padding-left: 2%;
 }
 
 #room-area,
@@ -75,7 +74,12 @@ body {
   text-align: center;
 }
 
-@media (min-width: 2em) {
+#chat-space {
+  height: 93%;
+}
+
+
+@media (max-width: 980px) {
   $default-height: 20rem;
 
   #chat-area {
@@ -87,16 +91,17 @@ body {
     height: $default-height;
   }
 
-  #chat-space {
-    height: 85%;
-  }
-
   #messsage {
     overflow: hidden;
   }
 
   #room-online-users {
     height: $default-height;
+  }
+
+
+  #chat-space {
+    height: 85%;
   }
 
   #send-msg-button {
@@ -108,6 +113,5 @@ body {
   #room-area {
     height: 17rem;
   }
-
 
 }
