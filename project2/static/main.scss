@@ -1,4 +1,4 @@
-$default-height: 54rem;
+$default-height: 40rem;
 $default-top-padding: 2%;
 $default-border: 1px solid black;
 $default-radius: 15px;
@@ -20,22 +20,21 @@ body {
   background-color: #b7b0ff;
 }
 
-#room-area {
-  height: $default-height;
-}
-
 #room-form {
   padding-top: $default-top-padding;
-  padding-left: 5%;
+  padding-left: 2%;
 }
 
-#room-name {
-  width: 170px;
+#room-form input {
+  max-width: 98%;
 }
 
 #room-online-users {
   padding-top: $default-top-padding;
+  @extend %block-style;
+  background-color: #ffc6b0;
 }
+
 
 #chat-space {
   padding-top: 1%;
@@ -44,14 +43,16 @@ body {
   overflow-wrap: break-word;
 }
 
+
+
 .time {
   float: right;
 }
 
 #chat-area {
   @extend %block-style;
-
   background-color: #ffefb0;
+  padding-left: 2%;
 }
 
 #room-area,
@@ -60,16 +61,57 @@ body {
   overflow-y: auto;
 }
 
-#room-online-users {
-  @extend %block-style;
-
-  background-color: #ffc6b0;
-}
 
 .sub-button {
   text-align: center;
 }
 
 #send-msg-button {
-  width: 10rem;
+  width: 75%;
+}
+
+#username-form {
+  text-align: center;
+}
+
+#chat-space {
+  height: 93%;
+}
+
+
+@media (max-width: 980px) {
+  $default-height: 20rem;
+
+  #chat-area {
+    height: 20rem;
+    margin-bottom: 2%;
+  }
+
+  #room-list-area {
+    height: $default-height;
+  }
+
+  #messsage {
+    overflow: hidden;
+  }
+
+  #room-online-users {
+    height: $default-height;
+  }
+
+
+  #chat-space {
+    height: 85%;
+  }
+
+  #send-msg-button {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #room-area {
+    height: 17rem;
+  }
+
 }

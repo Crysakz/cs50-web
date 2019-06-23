@@ -10,7 +10,7 @@ if (!window.localStorage.getItem('username')) {
     }
   };
   // Store username in user local storage
-  document.querySelector('#form').onsubmit = () => {
+  document.querySelector('#username-form').onsubmit = () => {
     const user = document.querySelector('#username').value;
     window.localStorage.setItem('username', user);
     window.localStorage.setItem('room', 'general');
@@ -133,10 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const onlineUsers = document.querySelector('#room-online-users');
     onlineUsers.innerHTML = '';
 
-    users.forEach((user) => {
-      if (user !== window.localStorage.getItem('username')) {
-        const id = user[0];
-        const username = user[1];
+    users.forEach(([id, username]) => {
+      if (username !== window.localStorage.getItem('username')) {
         const userLi = createLiElement(username, id);
         onlineUsers.append(userLi);
       }
@@ -155,9 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (onlineUser) onlineUser.parentNode.removeChild(onlineUser);
   });
 
-  socket.on('room already exist', () => {
+  socket.on('submit error', (idSelector) => {
     // Show user alert if he tries to add existing room
-    const roomForm = document.getElementById('room-name');
+    const roomForm = document.getElementById(idSelector);
     roomForm.classList.add('is-invalid');
   });
 });

@@ -8,16 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/main.css" />
 </head>
 
 <body>
-  <form id="form" method="POST">
-    <input type="text" id="username" maxlength="25" placeholder="Enter Username" />
-    <button class="btn btn-primary" id="submit-button" type="submit">
-      Submit
-    </button>
-  </form>
+  <div id="user-login">
+    <form id="username-form" method="POST">
+      <input type="text" id="username" maxlength="25" placeholder="Enter Username" />
+      <button class="btn btn-primary" id="submit-button" type="submit">
+        Submit
+      </button>
+    </form>
+  </div>
 
   <!-- Boostrap [4.3.1] CDN -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

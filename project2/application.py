@@ -29,14 +29,16 @@ def chat():
 
 @socketio.on("submit room")
 def add_room(data):
-    room = data["room"]
+    room = (data["room"]).strip()
 
-    if room not in rooms:
+    if (not len(room) or len(room) > 10):
+        emit("submit error", "room-name")
+    elif room not in rooms:
         rooms[room] = Rooms(room)
         emit("add room", room, broadcast=True)
     else:
         # Alerts only user, who tried adding room
-        emit("room already exist")
+        emit("submit error", "room-name")
 
 
 @socketio.on("join")
@@ -61,13 +63,15 @@ def on_join(data):
 @socketio.on("message")
 def send_message(data):
     room = data["room"]
-    message = data["message"]
+    message = data["message"].strip()
     user = data["username"]
 
-    epoch = time.localtime()
-    time_string = time.strftime("%H:%M", epoch)
+    if not message or len(message) > 1000:
+        emit("submit error", "message")
+    elif room in rooms:
+        epoch = time.localtime()
+        time_string = time.strftime("%H:%M", epoch)
 
-    if room in rooms:
         room_object = rooms.get(room)
         room_object.append_message([user, message, time_string])
         room_object.enforce_max_messages()

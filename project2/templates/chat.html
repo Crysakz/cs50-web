@@ -15,16 +15,17 @@
 
 <body>
   <div class="container-fluid">
+
     <div class="row">
-      <div class="col-2">
+
+      <div class="col-lg-2 col-sm-6 col-12 order-12 order-lg-1">
         <div id="room-list-area">
           <form id="room-form" novalidate>
             <div class="form-row">
-              <div class="col-6">
-                <input type="text" id="room-name" placeholder="Add new room" class="form-control" maxlength="10"
-                  minlength="5" required />
+              <div class="col-xg-6 col-lg-12 col-6 col-md-8 col-sm-6">
+                <input type="text" placeholder="Add new room" class="form-control" maxlength="10" required />
               </div>
-              <div class="col-6 sub-button">
+              <div class="col-xg-6 col-lg-12 col-6 col-md-4 col-sm-6 sub-button">
                 <button type="submit" class="btn btn-primary">
                   <i class="far fa-plus-square"></i> Add
                 </button>
@@ -43,25 +44,30 @@
           </div>
         </div>
       </div>
-      <div class="col-8" id="chat-area">
-        <div id="chat-space"></div>
 
-        <div id="submiting-message-area">
-          <form id="chat-form">
-            <div class="form-row align-items-end">
-              <div class="col-10">
-                <input type="text" id="message" placeholder="Send message" class="form-control" />
+      <div class="col-lg-8 col-sm-12  col-12 order-1 order-lg-6">
+        <div id="chat-area">
+
+          <div id="chat-space"></div>
+
+          <div id="submiting-message-area">
+            <form id="chat-form">
+              <div class="form-row align-items-end">
+                <div class="col-6 col-sm-8 col-xl-10">
+                  <input type="text" id="message" placeholder="Send message" class="form-control" maxlength="1000" />
+                </div>
+                <div class="col-6 col-sm-4  col-xl-2 sub-button">
+                  <button type="submit" class="btn btn-success" id="send-msg-button">
+                    <i class=" far fa-paper-plane"></i> Send
+                  </button>
+                </div>
               </div>
-              <div class="col-2 sub-button">
-                <button type="submit" class="btn btn-success" id="send-msg-button">
-                  <i class=" far fa-paper-plane"></i> Send
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
+
         </div>
       </div>
-      <div id="user-list" class="col-2">
+      <div class="col-lg-2 col-sm-6 col-12  order-6 order-lg-12" id="user-list">
         <ul id="room-online-users"></ul>
       </div>
     </div>
