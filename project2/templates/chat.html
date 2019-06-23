@@ -15,16 +15,17 @@
 
 <body>
   <div class="container-fluid">
+
     <div class="row">
-      <div class="col-lg-2 col-sm-6 col-12 order-6 order-lg-1">
+
+      <div class="col-lg-2 col-sm-6 col-12 order-12 order-lg-1">
         <div id="room-list-area">
           <form id="room-form" novalidate>
             <div class="form-row">
-              <div class="col-6">
-                <input type="text" id="room-name" placeholder="Add new room" class="form-control" maxlength="10"
-                  required />
+              <div class="col-xg-6 col-lg-12 col-6 col-md-8 col-sm-6">
+                <input type="text" placeholder="Add new room" class="form-control" maxlength="10" required />
               </div>
-              <div class="col-6 sub-button">
+              <div class="col-xg-6 col-lg-12 col-6 col-md-4 col-sm-6 sub-button">
                 <button type="submit" class="btn btn-primary">
                   <i class="far fa-plus-square"></i> Add
                 </button>
@@ -43,10 +44,12 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-8 col-sm-12 order-1 col-12 order-lg-6">
+
+      <div class="col-lg-8 col-sm-12  col-12 order-1 order-lg-6">
         <div id="chat-area">
 
           <div id="chat-space"></div>
+
           <div id="submiting-message-area">
             <form id="chat-form">
               <div class="form-row align-items-end">
@@ -61,9 +64,10 @@
               </div>
             </form>
           </div>
+
         </div>
       </div>
-      <div class="col-lg-2 col-sm-6 order-12 col-12 order-lg-12" id="user-list">
+      <div class="col-lg-2 col-sm-6 col-12  order-6 order-lg-12" id="user-list">
         <ul id="room-online-users"></ul>
       </div>
     </div>
